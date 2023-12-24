@@ -16,13 +16,13 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishResult;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-public class LightSensorAccess implements SensorEventListener {
+public class TemperatureSensorAccess implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor mLight;
     private TextView sensor_field;
     private Mqtt5BlockingClient mqttClient;
 
-    public LightSensorAccess(SensorManager sm, TextView tv) {
+    public TemperatureSensorAccess(SensorManager sm, TextView tv) {
         sensorManager = sm;
         sensor_field = tv;
         mLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
@@ -43,16 +43,17 @@ public class LightSensorAccess implements SensorEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        // The light sensor returns a single value.
-        float lux = event.values[0];
-        // Show luminosity value on the text field
-        sensor_field.setText(String.valueOf(lux));
+        // The temperature sensor returns a single value in the Celsius unit.
+        float temperatureInCelsius = event.values[0];
+
+        // Show temperature value on the text field.
+        sensor_field.setText(String.valueOf(temperatureInCelsius));
 
         try {
             Mqtt5PublishResult publishResult = mqttClient.publishWith()
-                    .topic("lux_luminosity")
+                    .topic("celsius_temperature")
                     .contentType("text/plain")
-                    .payload(ByteBuffer.allocate(4).putFloat(lux).array())
+                    .payload(ByteBuffer.allocate(4).putFloat(temperatureInCelsius).array())
                     .send();
         } catch (MqttClientStateException exception) {
             exception.printStackTrace();

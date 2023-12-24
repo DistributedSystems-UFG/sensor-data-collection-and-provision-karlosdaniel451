@@ -25,13 +25,17 @@ public class AccessSensorsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_access_sensors);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        TextView textView = (TextView) findViewById(R.id.textViewLuminosity);
+        TextView textViewLuminosity = (TextView) findViewById(R.id.textViewLuminosity);
+        TextView textViewTemperature = (TextView) findViewById(R.id.textViewTemperature);
         //mTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         //List<Sensor> deviceSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
         //EditText sensorInfoField = (EditText) findViewById(R.id.editTextSensorInfo);
         //sensorInfoField.setText(deviceSensors.toString());
 
-        LightSensorAccess lightSensorAccess = new LightSensorAccess(sensorManager, textView);
+        mTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+
+        LightSensorAccess lightSensorAccess = new LightSensorAccess(sensorManager, textViewLuminosity);
+        TemperatureSensorAccess temperatureSensorAccess = new TemperatureSensorAccess(sensorManager, textViewTemperature);
 
 
     }
